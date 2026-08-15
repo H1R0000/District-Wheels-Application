@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Added dotenv import
 
 import '/ui/auth/login_screen.dart';
 import '/ui/shared/role_selection_wrapper.dart';
@@ -8,10 +9,13 @@ import '/ui/shared/role_selection_wrapper.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Load the environment variables before initializing Supabase
+  await dotenv.load(fileName: ".env");
+
+  // Initialize Supabase using the secure keys
   await Supabase.initialize(
-    url: 'https://fhdxqdmmziatpojsuwnf.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZoZHhxZG1temlhdHBvanN1d25mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQwNzI0NzAsImV4cCI6MjA4OTY0ODQ3MH0.OF8FSf-ZpBDajCqSOCDm6srn893qQBSEl-xQbf25lzM',
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
   runApp(const ProviderScope(child: DistrictWheelsApp()));
